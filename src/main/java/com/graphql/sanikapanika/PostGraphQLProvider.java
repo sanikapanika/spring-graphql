@@ -3,6 +3,7 @@ package com.graphql.sanikapanika;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import graphql.GraphQL;
+import graphql.schema.DataFetcher;
 import graphql.schema.GraphQLSchema;
 import graphql.schema.idl.RuntimeWiring;
 import graphql.schema.idl.SchemaGenerator;
@@ -15,11 +16,12 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.URL;
+import java.util.LinkedHashMap;
 
 import static graphql.schema.idl.TypeRuntimeWiring.newTypeWiring;
 
 @Component
-public class GraphQLProvider {
+public class PostGraphQLProvider {
 
     @Autowired
     GraphQLDataFetchers graphQLDataFetchers;
@@ -28,7 +30,7 @@ public class GraphQLProvider {
 
     @PostConstruct
     public void init() throws IOException {
-        URL url = Resources.getResource("graphql/post.graphqls");
+        URL url = Resources.getResource("graphql/schema.graphqls");
         String sdl = Resources.toString(url, Charsets.UTF_8);
         GraphQLSchema graphQLSchema = buildSchema(sdl);
         this.graphQL = GraphQL.newGraphQL(graphQLSchema).build();
@@ -44,10 +46,32 @@ public class GraphQLProvider {
     private RuntimeWiring buildWriting() {
         return RuntimeWiring.newRuntimeWiring()
                 .type(newTypeWiring("Query")
-                .dataFetcher("allPosts", graphQLDataFetchers.getPosts()))
+                        .dataFetchers(
+                                this.createQueryMap()
+                        )
+                )
                 .type(newTypeWiring("Mutation")
-                .dataFetcher("newPost", graphQLDataFetchers.newPost()))
+                        .dataFetchers(
+                                this.createMutationMap()
+                        )
+                )
                 .build();
+    }
+
+    private LinkedHashMap<String, DataFetcher> createQueryMap() {
+        LinkedHashMap<String, DataFetcher> queryExecutorMap = new LinkedHashMap<>();
+        queryExecutorMap.put("allPosts", graphQLDataFetchers.getPosts());
+        queryExecutorMap.put("allAuthors", graphQLDataFetchers.getAuthors());
+
+        return queryExecutorMap;
+    }
+
+    private LinkedHashMap<String, DataFetcher> createMutationMap() {
+        LinkedHashMap<String, DataFetcher> mutationExecutorMap = new LinkedHashMap<>();
+        mutationExecutorMap.put("newPost", graphQLDataFetchers.newPost());
+        mutationExecutorMap.put("newAuthor", graphQLDataFetchers.newAuthor());
+
+        return mutationExecutorMap;
     }
 
     @Bean

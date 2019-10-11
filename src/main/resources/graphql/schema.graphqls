@@ -1,0 +1,21 @@
+type Post {
+    id: ID!
+    name: String!
+    desc: String!
+    author: Author
+}
+
+type Author {
+    id: ID!
+    name: String!
+}
+
+type Query {
+    allPosts: [Post]
+    allAuthors: [Author]
+}
+
+type Mutation {
+    newPost(name: String!, desc: String!, author: Int) : Post
+    newAuthor(name: String!) : Author
+}

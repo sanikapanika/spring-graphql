@@ -13,9 +13,11 @@ public class SanikapanikaApplication {
     }
 
     @Bean
-    public CommandLineRunner dummyData(PostRepository postRepository) {
+    public CommandLineRunner dummyData(PostRepository postRepository, AuthorRepository authorRepository) {
         return (args -> {
-            Post post = new Post("Kurac", "kurcina");
+            Author author = new Author("Author");
+            authorRepository.save(author);
+            Post post = new Post("Kurac", "kurcina", author);
             postRepository.save(post);
         });
     }

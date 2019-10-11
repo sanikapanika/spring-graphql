@@ -1,9 +1,6 @@
 package com.graphql.sanikapanika;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Post {
@@ -16,12 +13,16 @@ public class Post {
 
     private String desc;
 
+    @ManyToOne(targetEntity = Author.class, fetch = FetchType.EAGER)
+    private Author author;
+
     public Post() {
     }
 
-    public Post( String name, String desc) {
+    public Post( String name, String desc, Author author) {
         this.name = name;
         this.desc = desc;
+        this.author = author;
     }
 
     public Long getId() {
@@ -46,6 +47,14 @@ public class Post {
 
     public void setDesc(String desc) {
         this.desc = desc;
+    }
+
+    public Author getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Author author) {
+        this.author = author;
     }
 
     public String toString() {
