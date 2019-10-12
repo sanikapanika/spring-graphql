@@ -21,7 +21,7 @@ import java.util.LinkedHashMap;
 import static graphql.schema.idl.TypeRuntimeWiring.newTypeWiring;
 
 @Component
-public class PostGraphQLProvider {
+public class GraphQLProvider {
 
     @Autowired
     GraphQLDataFetchers graphQLDataFetchers;
