@@ -17,7 +17,7 @@ public class SanikapanikaApplication {
         return (args -> {
             Author author = new Author("Author");
             authorRepository.save(author);
-            Post post = new Post("Kurac", "kurcina", author);
+            Post post = new Post("Test Name", "Test Desc", author);
             postRepository.save(post);
         });
     }
