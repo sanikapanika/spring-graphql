@@ -3,21 +3,19 @@ package com.graphql.sanikapanika;
 import graphql.schema.DataFetcher;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 @Component
 public class GraphQLDataFetchers {
 
-    private PostRepository postRepository;
-    private AuthorRepository authorRepository;
+    private final PostManager postManager;
+    private final AuthorManager authorManager;
 
-    public GraphQLDataFetchers(PostRepository postRepository, AuthorRepository authorRepository) {
-        this.postRepository = postRepository;
-        this.authorRepository = authorRepository;
+    public GraphQLDataFetchers(PostManager postManager, AuthorManager authorManager) {
+        this.postManager = postManager;
+        this.authorManager = authorManager;
     }
 
     public DataFetcher getPosts() {
-        return dataFetchingEnvironment -> postRepository.findAll();
+        return dataFetchingEnvironment -> postManager.findAll();
     }
 
     public DataFetcher newPost() {
@@ -26,26 +24,19 @@ public class GraphQLDataFetchers {
             String descInput = environment.getArgument("desc");
             Long authorIdInput = environment.getArgument("author");
 
-            Optional<Author> author = this.authorRepository.findById(authorIdInput);
-            if(!author.isPresent()) {
-                throw new Exception("Author does not exist");
-            }
-
-            return postRepository.save(new Post(nameInput, descInput, author.get()));
+            return postManager.newPost(nameInput, descInput, authorIdInput);
         };
     }
 
     public DataFetcher getAuthors() {
-        return dataFetchingEnvironment -> authorRepository.findAll();
+        return dataFetchingEnvironment -> authorManager.findAll();
     }
 
     public DataFetcher newAuthor() {
         return environment -> {
             String nameInput = environment.getArgument("name");
 
-            Author author = new Author(nameInput);
-
-            return this.authorRepository.save(author);
+            return authorManager.newAuthor(nameInput);
         };
     }
 }

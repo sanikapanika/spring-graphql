@@ -1,5 +1,6 @@
 package com.graphql.sanikapanika;
 
+import com.graphql.sanikapanika.security.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,7 +14,7 @@ public class SanikapanikaApplication {
     }
 
     @Bean
-    public CommandLineRunner dummyData(PostRepository postRepository, AuthorRepository authorRepository) {
+    public CommandLineRunner dummyData(PostRepository postRepository, AuthorRepository authorRepository, UserRepository userRepository) {
         return (args -> {
             Author author = new Author("Author");
             authorRepository.save(author);
