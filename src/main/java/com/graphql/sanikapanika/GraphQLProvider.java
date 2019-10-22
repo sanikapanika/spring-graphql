@@ -70,6 +70,8 @@ public class GraphQLProvider {
         LinkedHashMap<String, DataFetcher> mutationExecutorMap = new LinkedHashMap<>();
         mutationExecutorMap.put("newPost", graphQLDataFetchers.newPost());
         mutationExecutorMap.put("newAuthor", graphQLDataFetchers.newAuthor());
+        mutationExecutorMap.put("newUser", graphQLDataFetchers.newUser());
+        mutationExecutorMap.put("confirmUser", graphQLDataFetchers.confirmUser());
 
         return mutationExecutorMap;
     }

@@ -19,6 +19,9 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Column(name = "is_confirmed", nullable = false)
+    private boolean isConfirmed;
+
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_roles",
@@ -35,6 +38,7 @@ public class User {
         this.username = username;
         this.password = this.getEncoder().encode(rawPassword);
         this.roles = roles;
+        this.isConfirmed = false;
     }
 
     private BCryptPasswordEncoder getEncoder() {
@@ -68,5 +72,17 @@ public class User {
     @Transactional
     public Collection<Role> getRoles() {
         return roles;
+    }
+
+    public boolean isConfirmed() {
+        return isConfirmed;
+    }
+
+    public void confirmUser() {
+        this.isConfirmed = true;
+    }
+
+    public void invalidateUser() {
+        this.isConfirmed = false;
     }
 }

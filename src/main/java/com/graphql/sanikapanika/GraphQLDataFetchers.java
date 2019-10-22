@@ -8,10 +8,12 @@ public class GraphQLDataFetchers {
 
     private final PostManager postManager;
     private final AuthorManager authorManager;
+    private final UserManager userManager;
 
-    public GraphQLDataFetchers(PostManager postManager, AuthorManager authorManager) {
+    public GraphQLDataFetchers(PostManager postManager, AuthorManager authorManager, UserManager userManager) {
         this.postManager = postManager;
         this.authorManager = authorManager;
+        this.userManager = userManager;
     }
 
     public DataFetcher getPosts() {
@@ -37,6 +39,23 @@ public class GraphQLDataFetchers {
             String nameInput = environment.getArgument("name");
 
             return authorManager.newAuthor(nameInput);
+        };
+    }
+
+    public DataFetcher newUser() {
+        return environment -> {
+            String usernameInput = environment.getArgument("username");
+            String rawPassInput = environment.getArgument("rawPassword");
+
+            return userManager.registerUser(usernameInput, rawPassInput);
+        };
+    }
+
+    public DataFetcher confirmUser() {
+        return environment -> {
+            String usernameInput = environment.getArgument("username");
+
+            return userManager.confirmUser(usernameInput);
         };
     }
 }

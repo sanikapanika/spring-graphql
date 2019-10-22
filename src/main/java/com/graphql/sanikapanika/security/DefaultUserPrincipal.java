@@ -54,7 +54,13 @@ public class DefaultUserPrincipal implements UserDetails {
     }
 
     private Collection<? extends GrantedAuthority> getAuthorities(Collection<Role> roles) {
-        return getGrantedAuthorities(getPrivileges(roles));
+        List<String> privileges = new ArrayList<>();
+
+        for (Role role : roles) {
+            privileges.add(role.getName());
+        }
+
+        return getGrantedAuthorities(privileges);
     }
 
     private List<GrantedAuthority> getGrantedAuthorities(List<String> privileges) {
@@ -64,20 +70,5 @@ public class DefaultUserPrincipal implements UserDetails {
             authorities.add(new SimpleGrantedAuthority(privilege));
         }
         return authorities;
-    }
-
-    private List<String> getPrivileges(Collection<Role> roles) {
-        List<String> privileges = new ArrayList<>();
-        List<Privilege> collection = new ArrayList<>();
-
-        for (Role role : roles) {
-            collection.addAll(role.getPrivileges());
-        }
-
-        for (Privilege item : collection) {
-            privileges.add(item.getName());
-        }
-
-        return privileges;
     }
 }

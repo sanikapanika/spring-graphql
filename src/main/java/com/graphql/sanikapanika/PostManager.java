@@ -17,11 +17,12 @@ public class PostManager {
         this.authorRepository = authorRepository;
     }
 
-    @PreAuthorize("hasRole('READ_PRIVILEGE')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<Post> findAll() {
         return postRepository.findAll();
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Post newPost(String name, String desc, Long authorId) throws Exception {
         Optional<Author> author = authorRepository.findById(authorId);
 

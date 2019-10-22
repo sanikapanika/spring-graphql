@@ -10,6 +10,11 @@ type Author {
     name: String!
 }
 
+type User {
+    username: String!,
+    isConfirmed: Boolean!
+}
+
 type Query {
     allPosts: [Post]
     allAuthors: [Author]
@@ -18,4 +23,6 @@ type Query {
 type Mutation {
     newPost(name: String!, desc: String!, author: Int) : Post
     newAuthor(name: String!) : Author
+    newUser(username: String!, rawPassword: String!) : User
+    confirmUser(username: String!) : User
 }
